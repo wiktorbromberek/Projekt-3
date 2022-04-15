@@ -40,10 +40,27 @@ def lista_nastepnikow(m):
         l.append(l1)
     return l
 
+def DFS_lista_nastepnikow(l1):
+    l=[]
+    for i in range(len(l1)):
+        for j in range(len(l1)):
+            if j not in l:
+                l.append(j)
+                
 
 
 
 
+
+def BFS_matrix(m):
+    l=[0]
+    i=0
+    while i < len(m):
+        for j in range(len(m)):
+            if j not in l:
+                l.append(j)
+        i+=1
+    return l
 
 l=matrix(n)
 print()
@@ -67,3 +84,8 @@ print("Lista następników")
 print()
 for i in range(len(lista_kolejna)):
     print(lista_kolejna[i])
+
+
+
+print()
+print(BFS_matrix(l))
