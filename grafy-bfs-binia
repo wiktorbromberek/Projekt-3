@@ -1,0 +1,195 @@
+import random
+n=30
+
+def matrix(n):
+    c = int(1/2*(n*(n-1)/2))
+    l = []
+    for i in range(n):
+        lista = [0]*n
+        l.append(lista)
+    count = 0
+    while count < c:
+        wiersz=random.randint(0,n-2)
+        kolumna=random.randint(wiersz+1,n-1)
+        #print(wiersz,kolumna)
+        if l[wiersz][kolumna] ==0:
+            l[wiersz][kolumna]=1
+            count+=1
+    return l
+
+def tabela_krawedzi(m):
+    l=[]
+    for i in range(len(m)):
+        for j in range(len(m)):
+            if m[i][j]==1:
+                l.append([i,j])
+    return l
+
+def lista_nastepnikow(m):
+    l=[]
+    for i in range(len(m)):
+        l1=[]
+        for j in range(len(m)):
+            if m[i][j]==1:
+                l1.append(j)
+        #l1.append(".")
+        l.append(l1)
+    return l
+
+def sort_BFS_matrix(m):
+    n = len(m)
+    lista = [0] * n
+    for i in range(n):
+        for j in range(n):
+            if m[i][j]==1:
+                lista[j]+=1
+    wynik = []
+    while len(wynik)<n:
+        for i in range(n):
+            if lista[i]==0:
+                lista[i]-=1
+                wynik.append(i)
+                for j in range(n):
+                    if m[i][j]==1:
+                        lista[j]-=1
+                break
+    return wynik
+
+def sort_BFS_tabela(tabela, n):
+    wynik = []
+    lista = [0]*n
+    for i in range(len(tabela)):
+        lista[tabela[i][1]]+=1
+    while len(wynik)<n:
+        for i in range(n):
+            if lista[i]==0:
+                wynik.append(i)
+                lista[i]=-1
+                for j in range(len(tabela)):
+                    if tabela[j][0]==i:
+                        lista[tabela[j][1]]-=1
+                break    
+    return wynik
+
+def sort_BFS_lista_nast(l):
+    n = len(l)
+    wynik = []
+    lista = [0]*n
+    for i in range(n):
+        if l[i]!=[]:
+            for j in l[i]:
+                lista[j]+=1
+    while len(wynik)<n:
+        for i in range(n):
+            if lista[i]==0:
+                wynik.append(i)
+                lista[i]=-1
+                for j in l[i]:
+                    lista[j]-=1
+                break
+    return wynik
+
+def BFS_matrix(m):
+    wynik = []
+    queue = [0]
+    n = len(m)
+    while len(wynik)<n:
+        if queue==[]:
+            for i in range(n):
+                if i not in wynik:
+                    queue.append(i)
+                    break
+        else:
+            if queue[0] not in wynik:
+                wynik.append(queue[0])
+            for i in range(n):
+                if m[queue[0]][i]==1 and i not in wynik:
+                    queue.append(i)
+            del queue[0]
+    return wynik
+                    
+def BFS_tabela(tabela, n):
+    wynik = []
+    queue = [0]
+    m=len(tabela)
+    while len(wynik)<n:
+        if queue==[]:
+            for i in range(m):
+                if tabela[i][0] not in wynik:
+                    queue.append(tabela[i][0])
+                    break
+        else:
+            if queue[0] not in wynik:
+                wynik.append(queue[0])
+            for i in range(m):
+                if tabela[i][0]==queue[0]:
+                    queue.append(tabela[i][1])
+            del queue[0]
+    return wynik
+ 
+def BFS_lista_nast(lista):
+    n = len(lista)
+    wynik = []
+    queue = [0]
+    while len(wynik)<n:
+        if queue==[]:
+            for i in range(n):
+                if i not in wynik:
+                    queue.append(i)
+                    break
+        else:
+            if queue[0] not in wynik:
+                wynik.append(queue[0])
+            if lista[queue[0]]!=[]:
+                for i in lista[queue[0]]:
+                    if i not in wynik:
+                        queue.append(i)
+            del queue[0]
+    return wynik
+
+
+l=matrix(n)
+print()
+print("Macierz sąsiedztwa")
+print()
+for i in range(n):
+    print(l[i])
+lista=tabela_krawedzi(l)
+print()
+print("------|-------")
+print()
+print("Tabela krawędzi")
+print()
+for i in range(len(lista)):
+    print(lista[i])
+print()
+print("------|-------")
+print()
+lista_kolejna=lista_nastepnikow(l)
+print("Lista następników")
+print()
+for i in range(len(lista_kolejna)):
+    print(lista_kolejna[i])
+print("--------------------------------")
+
+a=matrix(20)
+
+print("sortowanie topologiczne metodą BFS:")
+testowa = [[0,1,0,0,0,0,0,0,],[0,0,1,1,0,1,0,0],[0,0,0,1,0,0,0,0],[0,0,0,0,0,0,0,0],[0,1,0,0,0,1,1,1],[0,0,0,0,0,0,0,0],[0,0,0,1,0,0,0,0],[0,0,0,0,0,1,0,0]]
+tab = [[0,1],[1,2],[1,3],[2,3],[4,1],[1,5],[4,5],[4,7],[4,6],[6,3],[7,5]]
+ln = [[1],[2,3,5],[3],[],[1,5,6,7],[],[3],[5]]
+t = sort_BFS_matrix(l)
+print(t)
+tt = sort_BFS_tabela(lista, n)
+print(tt)
+ttt = sort_BFS_lista_nast(lista_kolejna)
+print(ttt)
+print()
+
+print("BFS:")
+b=BFS_matrix(l)
+print(b)
+bb=BFS_tabela(lista, n)
+print(bb)
+bbb=BFS_lista_nast(lista_kolejna)
+print(bbb)
