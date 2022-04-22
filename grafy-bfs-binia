@@ -115,8 +115,8 @@ def BFS_tabela(tabela, n):
     while len(wynik)<n:
         if queue==[]:
             for i in range(m):
-                if tabela[i][0] not in wynik:
-                    queue.append(tabela[i][0])
+                if i not in wynik:
+                    queue.append(i)
                     break
         else:
             if queue[0] not in wynik:
@@ -124,6 +124,8 @@ def BFS_tabela(tabela, n):
             for i in range(m):
                 if tabela[i][0]==queue[0]:
                     queue.append(tabela[i][1])
+                if tabela[i][0]>queue[0]:
+                    break
             del queue[0]
     return wynik
  
@@ -156,40 +158,78 @@ def DFS_matrix(m):
             for i in range(n):
                 if i not in wynik:
                     queue.append(i)
-        else:
-            if queue[0] not in wynik:
-                wynik.append(queue[0])
-            for j in range(n):
-                if m[queue[0]][j]==1:
-                    queue.append(j)
                     break
-            del queue[0]
+        else:
+            a=queue[0]
+            if a not in wynik:
+                wynik.append(a)
+            for j in range(0,n):
+                if m[a][j]==1:
+                    if j not in wynik:
+                        queue.insert(0,j)
+            queue.remove(a)
     return wynik
 
-def DFS_matrix(m, v, path=[]):
-    path.append(v)
-    for i in range(n):
-        if m[v][i]==1:
-            path = DFS_matrix(m,i,path)
-    if len(path)<len(m):
-        for j in range(n):
-            if i not in path:
-                path = DFS(m,i,path)
-                break
-    return path
+def DFS_tabela(tabela, n):
+    wynik=[]
+    queue=[0]
+    m=len(tabela)
+    while len(wynik)<n:
+        if queue==[]:
+            for i in range(m):
+                if i not in wynik:
+                    queue.append(i)
+                    break
+        else:
+            a=queue[0]
+            if a not in wynik:
+                wynik.append(a)
+            for j in range(0,m):
+                if tabela[j][0]==a:
+                    if tabela[j][1] not in wynik:
+                        queue.insert(0,tabela[j][1])
+            queue.remove(a)
+        # print(wynik,queue)
+    return wynik
 
-def dfs_recursive(graph, vertex, path=[]):
-    path += [vertex]
-    for neighbor in graph[vertex]:
-        if neighbor not in path:
-            path = dfs_recursive(graph, neighbor, path)
-    if len(path)<len(graph):
-        for i in range(len(graph)):
-            if i not in path:
-                v=i
+def DFS_lista_nast(lista):
+    n=len(lista)
+    wynik=[]
+    queue=[0]
+    while len(wynik)<n:
+        if queue==[]:
+            for i in range(n):
+                if i not in wynik:
+                    queue.append(i)
+                    break
+        else:
+            a=queue[0]
+            if a not in wynik:
+                wynik.append(a)
+            for j in lista[a]:
+                if j not in wynik:
+                    queue.insert(0,j)
+            queue.remove(a)
+    return wynik
+
+def sort_top(m,v=0,lista=[0]*n, wynik=[]):
+    #NIE DZIAŁA
+    lista[v]=1
+    for i in range(len(m)):
+        if m[v][i]==1 and lista[i]==0:
+            wynik = sort_top(m,i,lista,wynik)
+    wynik.insert(0,v)
+    print(wynik)
+    while len(wynik)<len(m):
+        for i in range(len(m)):
+            if lista[i]==0 and i not in wynik:
+                wynik = sort_top(m,i,lista,wynik)
                 break
-        path = dfs_recursive(graph,v,path)
-    return path
+    return wynik
+
+
+    
+
 
 l=matrix(n)
 # print()
@@ -218,9 +258,9 @@ lista_kolejna=lista_nastepnikow(l)
 # a=matrix(20)
 
 # print("sortowanie topologiczne metodą BFS:")
-testowa = [[0,1,0,0,0,0,0,0,],[0,0,1,1,0,1,0,0],[0,0,0,1,0,0,0,0],[0,0,0,0,0,0,0,0],[0,1,0,0,0,1,1,1],[0,0,0,0,0,0,0,0],[0,0,0,1,0,0,0,0],[0,0,0,0,0,1,0,0]]
-# tab = [[0,1],[1,2],[1,3],[2,3],[4,1],[1,5],[4,5],[4,7],[4,6],[6,3],[7,5]]
-ln = [[1],[2,3,5],[3],[],[1,5,6,7],[],[3],[5]]
+testowa = [[0,1,1,0,0,0,0,0,],[0,0,0,0,0,0,0,0],[0,0,0,1,0,0,0,1],[0,0,0,0,0,1,0,1],[0,0,1,0,0,0,1,0],[0,0,0,0,0,0,0,0],[0,0,0,0,0,1,0,0],[0,0,0,0,0,0,1,0]]
+tab = [[0,1],[0,2],[2,3],[2,7],[3,5],[3,7],[4,2],[4,6],[6,5],[7,6]]
+ln = [[1,2],[],[3,7],[5,7],[2,6],[],[5],[6]]
 
 print("sortowanie topologiczne metodą BFS:")
 t = sort_BFS_matrix(l)
@@ -231,13 +271,23 @@ ttt = sort_BFS_lista_nast(lista_kolejna)
 print(ttt)
 print()
 
-print("BFS:")
-b=BFS_matrix(l)
-print(b)
-bb=BFS_tabela(lista, n)
-print(bb)
-bbb=BFS_lista_nast(lista_kolejna)
-print(bbb)
-print()
-d=dfs_recursive(ln,0,[])
-print(d)
+print("sortowanie DFS:")
+
+
+# print("BFS:")
+# b=BFS_matrix(l)
+# print(b)
+# bb=BFS_tabela(lista, n)
+# print(bb)
+# bbb=BFS_lista_nast(lista_kolejna)
+# print(bbb)
+# print()
+
+# print("DFS")
+# d=DFS_matrix(l)
+# print(d)
+# dd= DFS_tabela(lista, n)
+# print(dd)
+# ddd=DFS_lista_nast(lista_kolejna)
+# print(ddd)
+
