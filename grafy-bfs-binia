@@ -1,5 +1,5 @@
 import random
-n=10
+n=100
 
 def matrix(n):
     c = int(1/2*(n*(n-1)/2))
@@ -212,6 +212,21 @@ def DFS_lista_nast(lista):
             queue.remove(a)
     return wynik
 
+
+    #NIE DZIAŁA
+    lista[v]=1
+    for i in range(len(m)):
+        if m[v][i]==1 and lista[i]==0:
+            wynik = sort_top(m,i,lista,wynik)
+    wynik.insert(0,v)
+    print(wynik)
+    while len(wynik)<len(m):
+        for i in range(len(m)):
+            if lista[i]==0 and i not in wynik:
+                wynik = sort_top(m,i,lista,wynik)
+                break
+    return wynik
+
 def sort_DFS_matrix(m):
     n=len(m)
     path=[]
@@ -227,17 +242,17 @@ def sort_DFS_matrix(m):
                     break
         else:
             a=path[-1]
-            if v[a]==0:
+            if v[a]==0: #jesli nieodwiedzony to robimy ze odwiedzony i szukamy nastepniika nieodwiedzonego
                 v[a]=1
                 for i in range(n):
                     if m[a][i]==1 and v[i]==0:
                         path.append(i)
                         break
-                if path[-1]==a:
+                if path[-1]==a: #jesli takich nie ma to wpisujemy do wyniku wierzcholek i bedziemy sie cofac
                     wynik.insert(0,a)
                     v[a]=2
-                    del path[-1]
-            elif v[a]==1:
+                    del path[-1] #usuwamy go ze sciezki
+            elif v[a]==1: #gdy wchodzimy do odwiedzonego to szukamy nieodwiedzonyh nastepnikow a gdy nie ma ich to wypisujemy do wyniku wierzcholek
                 for i in range(n):
                     if m[a][i]==1 and v[i]==0:
                         path.append(i)
@@ -248,7 +263,79 @@ def sort_DFS_matrix(m):
                     del path[-1]
         # print(wynik,path)            
     return wynik
-    
+
+def sort_DFS_tabela(tabela,n):
+    m=len(tabela)
+    path=[]
+    wynik=[]
+    v=[0]*n
+    start = 0
+    path.append(start)
+    while len(wynik)<n:
+        if path==[]:
+            for i in range(n):
+                if v[i]==0:
+                    path.append(i)
+                    break
+        else:
+            a=path[-1]
+            if v[a]==0:
+                v[a]=1
+                for i in range(m):
+                    if tabela[i][0]==a and v[tabela[i][1]]==0:
+                        path.append(tabela[i][1])
+                        break
+                if path[-1]==a:
+                    v[a]=2
+                    wynik.insert(0,a)
+                    del path[-1]
+            elif v[a]==1:
+                for i in range(m):
+                    if tabela[i][0]==a and v[tabela[i][1]]==0:
+                        path.append(tabela[i][1])
+                        break
+                if path[-1]==a:
+                    v[a]=2
+                    wynik.insert(0,a)
+                    del path[-1]
+    return wynik
+
+def sort_DFS_lista_nast(lista):
+    n=len(lista)
+    path=[]
+    wynik=[]
+    v=[0]*n
+    start=0
+    path.append(start)
+    while len(wynik)<n:
+        if path==[]:
+            for i in range(n):
+                if v[i]==0:
+                    path.append(i)
+                    break
+        else:
+            a=path[-1]
+            if v[a]==0:
+                v[a]=1
+                for i in lista[a]:
+                    if v[i]==0:
+                        path.append(i)
+                        break
+                if path[-1]==a:
+                    wynik.insert(0,a)
+                    v[a]=2
+                    del path[-1]
+            elif v[a]==1:
+                for i in lista[a]:
+                    if v[i]==0:
+                        path.append(i)
+                        break
+                if path[-1]==a:
+                    v[a]=2
+                    wynik.insert(0,a)
+                    del path[-1]
+    return wynik
+
 
 
 l=matrix(n)
@@ -271,8 +358,8 @@ lista=tabela_krawedzi(l)
 lista_kolejna=lista_nastepnikow(l)
 # print("Lista następników")
 # print()
-# for i in range(len(lista_kolejna)):
-#     print(lista_kolejna[i])
+for i in range(len(lista_kolejna)):
+    print(lista_kolejna[i])
 # print("--------------------------------")
 
 # a=matrix(20)
@@ -292,7 +379,12 @@ print(ttt)
 print()
 
 print("sortowanie DFS:")
-
+s=sort_DFS_matrix(l)
+print(s)
+ss=sort_DFS_tabela(lista,n)
+print(ss)
+sss=sort_DFS_lista_nast(lista_kolejna)
+print(sss)
 
 # print("BFS:")
 # b=BFS_matrix(l)
