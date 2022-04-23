@@ -1,0 +1,412 @@
+import random
+import time
+#jedynie zamula BFS dla tabeli krawędzi więc może ją trzeba osobno jakoś pomierzyć
+print("podaj n dla którego mierzymy od n do 10n")
+n = int(input())
+for q in range(n,10*n+1, n):
+
+
+    def matrix(n):
+        c = int(1/2*(n*(n-1)/2))
+        l = []
+        for i in range(n):
+            lista = [0]*n
+            l.append(lista)
+        count = 0
+        while count < c:
+            wiersz=random.randint(0,n-2)
+            kolumna=random.randint(wiersz+1,n-1)
+            #print(wiersz,kolumna)
+            if l[wiersz][kolumna]==0:
+                l[wiersz][kolumna]=1
+                count+=1
+        return l
+
+    def tabela_krawedzi(m):
+        l=[]
+        for i in range(len(m)):
+            for j in range(len(m)):
+                if m[i][j]==1:
+                    l.append([i,j])
+        return l
+
+    def lista_nastepnikow(m):
+        l=[]
+        for i in range(len(m)):
+            l1=[]
+            for j in range(len(m)):
+                if m[i][j]==1:
+                    l1.append(j)
+            #l1.append(".")
+            l.append(l1)
+        return l
+
+    def sort_BFS_matrix(m):
+        n = len(m)
+        lista = [0] * n
+        for i in range(n):
+            for j in range(n):
+                if m[i][j]==1:
+                    lista[j]+=1
+        wynik = []
+        while len(wynik)<n:
+            for i in range(n):
+                if lista[i]==0:
+                    lista[i]-=1
+                    wynik.append(i)
+                    for j in range(n):
+                        if m[i][j]==1:
+                            lista[j]-=1
+                    break
+        return wynik
+
+    def sort_BFS_tabela(tabela, n):
+        wynik = []
+        lista = [0]*n
+        for i in range(len(tabela)):
+            lista[tabela[i][1]]+=1
+        while len(wynik)<n:
+            for i in range(n):
+                if lista[i]==0:
+                    wynik.append(i)
+                    lista[i]=-1
+                    for j in range(len(tabela)):
+                        if tabela[j][0]==i:
+                            lista[tabela[j][1]]-=1
+                    break    
+        return wynik
+
+    def sort_BFS_lista_nast(l):
+        n = len(l)
+        wynik = []
+        lista = [0]*n
+        for i in range(n):
+            if l[i]!=[]:
+                for j in l[i]:
+                    lista[j]+=1
+        while len(wynik)<n:
+            for i in range(n):
+                if lista[i]==0:
+                    wynik.append(i)
+                    lista[i]=-1
+                    for j in l[i]:
+                        lista[j]-=1
+                    break
+        return wynik
+
+    def BFS_matrix(m):
+        wynik = []
+        queue = [0]
+        n = len(m)
+        while len(wynik)<n:
+            if queue==[]:
+                for i in range(n):
+                    if i not in wynik:
+                        queue.append(i)
+                        break
+            else:
+                if queue[0] not in wynik:
+                    wynik.append(queue[0])
+                for i in range(n):
+                    if m[queue[0]][i]==1 and i not in wynik:
+                        queue.append(i)
+                del queue[0]
+        return wynik
+                        
+    def BFS_tabela(tabela, n):
+        wynik = []
+        queue = [0]
+        m=len(tabela)
+        while len(wynik)<n:
+            if queue==[]:
+                for i in range(m):
+                    if i not in wynik:
+                        queue.append(i)
+                        break
+            else:
+                if queue[0] not in wynik:
+                    wynik.append(queue[0])
+                for i in range(m):
+                    if tabela[i][0]==queue[0]:
+                        queue.append(tabela[i][1])
+                    if tabela[i][0]>queue[0]:
+                        break
+                del queue[0]
+        return wynik
+    
+    def BFS_lista_nast(lista):
+        n = len(lista)
+        wynik = []
+        queue = [0]
+        while len(wynik)<n:
+            if queue==[]:
+                for i in range(n):
+                    if i not in wynik:
+                        queue.append(i)
+                        break
+            else:
+                if queue[0] not in wynik:
+                    wynik.append(queue[0])
+                if lista[queue[0]]!=[]:
+                    for i in lista[queue[0]]:
+                        if i not in wynik:
+                            queue.append(i)
+                del queue[0]
+        return wynik
+
+    def DFS_matrix(m):
+        wynik=[]
+        n = len(m)
+        queue=[0]
+        while len(wynik)<n:
+            if queue==[]:
+                for i in range(n):
+                    if i not in wynik:
+                        queue.append(i)
+                        break
+            else:
+                a=queue[0]
+                if a not in wynik:
+                    wynik.append(a)
+                for j in range(0,n):
+                    if m[a][j]==1:
+                        if j not in wynik:
+                            queue.insert(0,j)
+                queue.remove(a)
+        return wynik
+
+    def DFS_tabela(tabela, n):
+        wynik=[]
+        queue=[0]
+        m=len(tabela)
+        while len(wynik)<n:
+            if queue==[]:
+                for i in range(m):
+                    if i not in wynik:
+                        queue.append(i)
+                        break
+            else:
+                a=queue[0]
+                if a not in wynik:
+                    wynik.append(a)
+                for j in range(0,m):
+                    if tabela[j][0]==a:
+                        if tabela[j][1] not in wynik:
+                            queue.insert(0,tabela[j][1])
+                queue.remove(a)
+            # print(wynik,queue)
+        return wynik
+
+    def DFS_lista_nast(lista):
+        n=len(lista)
+        wynik=[]
+        queue=[0]
+        while len(wynik)<n:
+            if queue==[]:
+                for i in range(n):
+                    if i not in wynik:
+                        queue.append(i)
+                        break
+            else:
+                a=queue[0]
+                if a not in wynik:
+                    wynik.append(a)
+                for j in lista[a]:
+                    if j not in wynik:
+                        queue.insert(0,j)
+                queue.remove(a)
+        return wynik
+
+
+
+    def sort_DFS_matrix(m):
+        n=len(m)
+        path=[]
+        wynik=[]
+        v=[0]*n
+        start = 0
+        path.append(start)
+        while len(wynik)<n:
+            if path==[]:
+                for i in range(n):
+                    if v[i]==0:
+                        path.append(i)
+                        break
+            else:
+                a=path[-1]
+                if v[a]==0: #jesli nieodwiedzony to robimy ze odwiedzony i szukamy nastepniika nieodwiedzonego
+                    v[a]=1
+                    for i in range(n):
+                        if m[a][i]==1 and v[i]==0:
+                            path.append(i)
+                            break
+                    if path[-1]==a: #jesli takich nie ma to wpisujemy do wyniku wierzcholek i bedziemy sie cofac
+                        wynik.insert(0,a)
+                        v[a]=2
+                        del path[-1] #usuwamy go ze sciezki
+                elif v[a]==1: #gdy wchodzimy do odwiedzonego to szukamy nieodwiedzonyh nastepnikow a gdy nie ma ich to wypisujemy do wyniku wierzcholek
+                    for i in range(n):
+                        if m[a][i]==1 and v[i]==0:
+                            path.append(i)
+                            break
+                    if path[-1]==a:
+                        v[a]=2
+                        wynik.insert(0,a)
+                        del path[-1]
+            # print(wynik,path)            
+        return wynik
+
+    def sort_DFS_tabela(tabela,n):
+        m=len(tabela)
+        path=[]
+        wynik=[]
+        v=[0]*n
+        start = 0
+        path.append(start)
+        while len(wynik)<n:
+            if path==[]:
+                for i in range(n):
+                    if v[i]==0:
+                        path.append(i)
+                        break
+            else:
+                a=path[-1]
+                if v[a]==0:
+                    v[a]=1
+                    for i in range(m):
+                        if tabela[i][0]==a and v[tabela[i][1]]==0:
+                            path.append(tabela[i][1])
+                            break
+                    if path[-1]==a:
+                        v[a]=2
+                        wynik.insert(0,a)
+                        del path[-1]
+                elif v[a]==1:
+                    for i in range(m):
+                        if tabela[i][0]==a and v[tabela[i][1]]==0:
+                            path.append(tabela[i][1])
+                            break
+                    if path[-1]==a:
+                        v[a]=2
+                        wynik.insert(0,a)
+                        del path[-1]
+        return wynik
+
+    def sort_DFS_lista_nast(lista):
+        n=len(lista)
+        path=[]
+        wynik=[]
+        v=[0]*n
+        start=0
+        path.append(start)
+        while len(wynik)<n:
+            if path==[]:
+                for i in range(n):
+                    if v[i]==0:
+                        path.append(i)
+                        break
+            else:
+                a=path[-1]
+                if v[a]==0:
+                    v[a]=1
+                    for i in lista[a]:
+                        if v[i]==0:
+                            path.append(i)
+                            break
+                    if path[-1]==a:
+                        wynik.insert(0,a)
+                        v[a]=2
+                        del path[-1]
+                elif v[a]==1:
+                    for i in lista[a]:
+                        if v[i]==0:
+                            path.append(i)
+                            break
+                    if path[-1]==a:
+                        v[a]=2
+                        wynik.insert(0,a)
+                        del path[-1]
+        return wynik
+
+
+    l=matrix(n)
+    
+    lista=tabela_krawedzi(l)
+    
+    lista_kolejna=lista_nastepnikow(l)
+
+    print("dla n="+str(q))
+
+    print("BFS:")
+    print("macierz")
+    a=time.time()
+    x=BFS_matrix(l)
+    b=time.time()
+    print(format(b-a,".5f"))
+    print("tabela")
+    a=time.time()
+    xx=BFS_tabela(lista, q)
+    b=time.time()
+    print(format(b-a,".5f"))
+    print("lista nastepnikow")
+    a=time.time()
+    xxx=BFS_lista_nast(lista_kolejna)
+    b=time.time()
+    print(format(b-a,".5f"))
+    print()
+    
+
+    print("DFS:")
+    print("macierz")
+    a=time.time()
+    x=DFS_matrix(l)
+    b=time.time()
+    print(format(b-a,".5f"))
+    print("tabela")
+    a=time.time()
+    xx=DFS_tabela(lista, q)
+    b=time.time()
+    print(format(b-a,".5f"))
+    print("lista nastepnikow")
+    a=time.time()
+    xxx=DFS_lista_nast(lista_kolejna)
+    b=time.time()
+    print(format(b-a,".5f"))
+    print()
+
+    print("BFS sortowanie:")
+    print("macierz")
+    a=time.time()
+    x=sort_BFS_matrix(l)
+    b=time.time()
+    print(format(b-a,".5f"))
+    print("tabela")
+    a=time.time()
+    xx=sort_BFS_tabela(lista, q)
+    b=time.time()
+    print(format(b-a,".5f"))
+    print("lista nastepnikow")
+    a=time.time()
+    xxx=sort_BFS_lista_nast(lista_kolejna)
+    b=time.time()
+    print(format(b-a,".5f"))
+    print()
+
+    print("DFS sortowanie:")
+    print("macierz")
+    a=time.time()
+    x=sort_DFS_matrix(l)
+    b=time.time()
+    print(format(b-a,".5f"))
+    print("tabela")
+    a=time.time()
+    xx=sort_DFS_tabela(lista, q)
+    b=time.time()
+    print(format(b-a,".5f"))
+    print("lista nastepnikow")
+    a=time.time()
+    xxx=sort_DFS_lista_nast(lista_kolejna)
+    b=time.time()
+    print(format(b-a,".5f"))
+    print()
+    print()
