@@ -331,7 +331,7 @@ for q in range(n,10*n+1, n):
 
 
 
-    l=matrix(n)
+    l=matrix(q)
     
     lista=tabela_krawedzi(l)
     
