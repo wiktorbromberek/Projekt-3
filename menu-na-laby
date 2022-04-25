@@ -12,7 +12,7 @@ def matrix(n):
         wiersz=random.randint(0,n-2)
         kolumna=random.randint(wiersz+1,n-1)
         #print(wiersz,kolumna)
-        if l[wiersz][kolumna] ==0:
+        if l[wiersz][kolumna]==0:
             l[wiersz][kolumna]=1
             count+=1
     return l
@@ -100,35 +100,36 @@ def BFS_matrix(m):
                     queue.append(i)
                     break
         else:
-            if queue[0] not in wynik:
-                wynik.append(queue[0])
+            # if queue[0] not in wynik:
+            wynik.append(queue[0])
             for i in range(n):
-                if m[queue[0]][i]==1 and i not in wynik:
+                if m[queue[0]][i]==1 and i not in wynik and i not in queue:
                     queue.append(i)
             del queue[0]
     return wynik
-                    
+
 def BFS_tabela(tabela, n):
     wynik = []
     queue = [0]
     m=len(tabela)
     while len(wynik)<n:
         if queue==[]:
-            for i in range(m):
+            for i in range(n):
                 if i not in wynik:
                     queue.append(i)
                     break
         else:
-            if queue[0] not in wynik:
-                wynik.append(queue[0])
+            # if queue[0] not in wynik:
+            wynik.append(queue[0])
             for i in range(m):
-                if tabela[i][0]==queue[0]:
+                if tabela[i][0]==queue[0] and tabela[i][1] not in wynik and tabela[i][1] not in queue:
                     queue.append(tabela[i][1])
                 if tabela[i][0]>queue[0]:
                     break
             del queue[0]
+        # print(wynik,queue)
     return wynik
- 
+
 def BFS_lista_nast(lista):
     n = len(lista)
     wynik = []
@@ -140,11 +141,11 @@ def BFS_lista_nast(lista):
                     queue.append(i)
                     break
         else:
-            if queue[0] not in wynik:
-                wynik.append(queue[0])
+            # if queue[0] not in wynik:
+            wynik.append(queue[0])
             if lista[queue[0]]!=[]:
                 for i in lista[queue[0]]:
-                    if i not in wynik:
+                    if i not in wynik and i not in queue:
                         queue.append(i)
             del queue[0]
     return wynik
@@ -161,11 +162,11 @@ def DFS_matrix(m):
                     break
         else:
             a=queue[0]
-            if a not in wynik:
-                wynik.append(a)
+            # if a not in wynik:
+            wynik.append(a)
             for j in range(0,n):
                 if m[a][j]==1:
-                    if j not in wynik:
+                    if j not in wynik and j not in queue:
                         queue.insert(0,j)
             queue.remove(a)
     return wynik
@@ -176,17 +177,17 @@ def DFS_tabela(tabela, n):
     m=len(tabela)
     while len(wynik)<n:
         if queue==[]:
-            for i in range(m):
+            for i in range(n):
                 if i not in wynik:
                     queue.append(i)
                     break
         else:
             a=queue[0]
-            if a not in wynik:
-                wynik.append(a)
+            # if a not in wynik:
+            wynik.append(a)
             for j in range(0,m):
                 if tabela[j][0]==a:
-                    if tabela[j][1] not in wynik:
+                    if tabela[j][1] not in wynik and tabela[j][1] not in queue:
                         queue.insert(0,tabela[j][1])
             queue.remove(a)
         # print(wynik,queue)
@@ -204,13 +205,14 @@ def DFS_lista_nast(lista):
                     break
         else:
             a=queue[0]
-            if a not in wynik:
-                wynik.append(a)
+            # if a not in wynik:
+            wynik.append(a)
             for j in lista[a]:
-                if j not in wynik:
+                if j not in wynik and j not in queue:
                     queue.insert(0,j)
             queue.remove(a)
     return wynik
+
 
 def sort_DFS_matrix(m):
     n=len(m)
@@ -320,6 +322,8 @@ def sort_DFS_lista_nast(lista):
                     wynik.insert(0,a)
                     del path[-1]
     return wynik
+
+
 
 while True:
     print("podaj liczbę wierzchołków lub wyjdź z programu wciskając 0")
